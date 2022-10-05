@@ -1,6 +1,6 @@
 # Markdown-Mail-Sender
 
-## Primary features are:
+## Primary features will include:
 - Markdown can be sent as email
 - User should be able to attach documents
 - Autosave feature◊

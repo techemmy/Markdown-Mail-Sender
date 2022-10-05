@@ -3,4 +3,4 @@
 ## Primary features will include:
 - Markdown can be sent as email
 - User should be able to attach documents
-- Autosave feature◊
+- Email text input autosave

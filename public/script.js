@@ -31,20 +31,21 @@ sendBtn.addEventListener('click', event => {
 
         const mailBody = simplemde.value().trim();
         if (mailBody.length > 10) {
-            console.log(mailBody.length);
-        }
-
-        fetch("/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify({
-                mailTo: "ywwmrvzuo@emergentvillage.org",
-                mailSubject: "Testing mailer",
-                mailContent: mailBody
+            fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    mailFrom: "TechEmmy",
+                    mailTo: "ywwmrvzuo@emergentvillage.org",
+                    mailSubject: "Testing mailer",
+                    mailBody
+                })
+            }).then(async data => {
+                console.log("Fetched", await data.json());
+            }).catch(async error => {
+                alert("An error occured, cound't fetch data")
             })
-        }).then(data => {
-            console.log("Fetched", data);
-        })
+        }
     });

@@ -15,7 +15,6 @@ if (simplemde.value().trim().length > 1) {
         sendBtn.disabled = true;
     }
 
-// I'm targetting the form element because the form textarea element is hidden by simplemde.js library
 simplemde.codemirror.on("change", function(){
     const mailBody = simplemde.value().trim();
 
@@ -25,9 +24,6 @@ simplemde.codemirror.on("change", function(){
         sendBtn.disabled = true;
     }
 });
-// document.querySelector('form').addEventListener('keyup', () => {
-
-// })
 
 sendBtn.addEventListener('click', event => {
         event.preventDefault();

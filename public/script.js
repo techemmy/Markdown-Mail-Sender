@@ -43,8 +43,8 @@ sendBtn.addEventListener('click', event => {
                 })
             }).then(async data => {
                 console.log("Fetched", await data.json());
-            }).catch(async error => {
-                alert("An error occured, cound't fetch data")
+            }).catch(error => {
+                alert("An error occured, cound't send data")
             })
         }
     });

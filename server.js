@@ -1,14 +1,22 @@
-import { createServer } from "http";
+import http from "http";
 import { getSanitizingConverter } from "pagedown";
 import fs from "fs";
 import dotenv from "dotenv";
 import { getMailInfo, sendMail } from "./utils.js";
+import statik from "node-static";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 const HOST = process.env.HOST;
 const PORT = process.env.PORT;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const app = createServer(async (req, res) => {
+var fileServer = new statik.Server(__dirname);
+
+const app = http.createServer(async (req, res) => {
+
     // render html files to response
     let pathToFile = "./views/";
     switch (req.url) {
@@ -30,13 +38,19 @@ const app = createServer(async (req, res) => {
             break;
 
         default:
-            // load public files
-            if (req.url.startsWith("/public")) {
-                console.log("ok", `.${req.url}`)
-                var file = fs.createReadStream(`.${req.url}`);
-                file.pipe(res);
-                res.writeHead(200, {'Content-Type': 'text/javascript'});
-            }
+            req.addListener('end', function () {
+                fileServer.serve(req, res, function (err, result) {
+                    if (err) { // There was an error serving the file
+                        console.error(
+                            "Error serving " + req.url + " - " + err.message
+                        );
+
+                        // Respond to the client
+                        res.writeHead(err.status, err.headers);
+                        res.end();
+                    }
+                });
+            }).resume();
 
             pathToFile += "404.html";
             break

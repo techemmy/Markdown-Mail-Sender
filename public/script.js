@@ -1,6 +1,6 @@
 const sendBtn = document.getElementById('send-btn');
-
 const mailBodyContainer = document.getElementById("mail-body");
+
 var simplemde = new SimpleMDE({
     element: mailBodyContainer, autosave: {
         enabled: true,
@@ -16,7 +16,7 @@ if (simplemde.value().trim().length > 1) {
     }
 
 // I'm targetting the form element because the form textarea element is hidden by simplemde.js library
-document.querySelector('form').addEventListener('keyup', () => {
+simplemde.codemirror.on("change", function(){
     const mailBody = simplemde.value().trim();
 
     if (mailBody.length > 1) {
@@ -24,7 +24,10 @@ document.querySelector('form').addEventListener('keyup', () => {
     } else {
         sendBtn.disabled = true;
     }
-})
+});
+// document.querySelector('form').addEventListener('keyup', () => {
+
+// })
 
 sendBtn.addEventListener('click', event => {
         event.preventDefault();

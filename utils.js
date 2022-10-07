@@ -16,6 +16,9 @@ function getMailInfo(requestObject) {
             );
             resolve(parsedMailInfo);
         });
+        requestObject.on("error", (error) => {
+            reject(error);
+        })
     });
 }
 

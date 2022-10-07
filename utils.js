@@ -46,7 +46,7 @@ function sendMail(sender, to, subject, body, htmlBody) {
                     // default message fields
 
                     // sender info
-                    from:  `From - ${sender||to} <${process.env.MAIL_USER}>`,
+                    from:  `${sender||to} <${process.env.MAIL_USER}>`,
                 }
             );
 

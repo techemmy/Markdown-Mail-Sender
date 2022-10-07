@@ -2,31 +2,33 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import fs from "fs";
 
-dotenv.config()
+dotenv.config();
 
 function getMailInfo(requestObject) {
     return new Promise((resolve, reject) => {
-        let mailInfo = []
-        requestObject.on('data', chunk => {
+        let mailInfo = [];
+        requestObject.on("data", (chunk) => {
             mailInfo.push(chunk);
-        })
-        requestObject.on('end', () => {
-            const parsedMailInfo = JSON.parse(Buffer.concat(mailInfo).toString('utf-8'));
+        });
+        requestObject.on("end", () => {
+            const parsedMailInfo = JSON.parse(
+                Buffer.concat(mailInfo).toString("utf-8")
+            );
             resolve(parsedMailInfo);
-        })
-    })
+        });
+    });
 }
 
 function sendMail(sender, to, subject, body, htmlBody) {
     return new Promise((resolve, reject) => {
         nodemailer.createTestAccount((err, account) => {
             if (err) {
-                console.error('Failed to create a testing account');
+                console.error("Failed to create a testing account");
                 console.error(err);
                 return process.exit(1);
             }
 
-            console.log('Credentials obtained, sending message...', sender);
+            console.log("Credentials obtained, sending message...", sender);
 
             // NB! Store the account object values somewhere if you want
             // to re-use the same account for future mail deliveries
@@ -37,16 +39,14 @@ function sendMail(sender, to, subject, body, htmlBody) {
                     service: "gmail",
                     auth: {
                         user: process.env.MAIL_USER,
-                        pass: process.env.MAIL_PASS
+                        pass: process.env.MAIL_PASS,
                     },
                     logger: true,
-                    allowInternalNetworkInterfaces: false
+                    allowInternalNetworkInterfaces: false,
                 },
                 {
-                    // default message fields
-
                     // sender info
-                    from:  `${sender||to} <${process.env.MAIL_USER}>`,
+                    from: `${sender || to} <${process.env.MAIL_USER}>`,
                 }
             );
 
@@ -56,7 +56,7 @@ function sendMail(sender, to, subject, body, htmlBody) {
                 to: to,
 
                 // Subject of the message
-                subject: subject + " --- " + Date.now(),
+                subject: subject,
 
                 // plaintext body
                 text: body,
@@ -67,19 +67,19 @@ function sendMail(sender, to, subject, body, htmlBody) {
 
             transporter.sendMail(message, (error, status) => {
                 if (error) {
-                    console.log('Error occurred');
+                    console.log("Error occurred");
                     console.log(error.message);
-                    reject({success: false, status: error})
+                    reject({ success: false, status: error });
                 }
 
-                resolve({success: true, status})
+                resolve({ success: true, status });
                 console.log(nodemailer.getTestMessageUrl(status));
 
                 // only needed when using pooled connections
                 transporter.close();
             });
         });
-    })
+    });
 }
 
 function serveFile(res, pathToFile) {

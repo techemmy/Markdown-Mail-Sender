@@ -20,7 +20,7 @@ const app = http.createServer(async (req, res) => {
     if (req.url === "/" && req.method === "GET") {
         pathToFile += "index.html";
         serveFile(res, pathToFile)
-    } else if (req.method === "POST") {
+    } else if (req.url === "/" && req.method === "POST") {
         try {
             const {mailFrom, mailTo, mailSubject, mailBody} = await getMailInfo(req);
             const markdownToHTMLConverter = new getSanitizingConverter();

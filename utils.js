@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import fs from "fs";
+
 dotenv.config()
 
 function getMailInfo(requestObject) {
@@ -71,7 +73,7 @@ function sendMail(sender, to, subject, body, htmlBody) {
                 }
 
                 resolve({success: true, status})
-                console.log(nodemailer.getTestMessageUrl(success));
+                console.log(nodemailer.getTestMessageUrl(status));
 
                 // only needed when using pooled connections
                 transporter.close();
@@ -80,4 +82,14 @@ function sendMail(sender, to, subject, body, htmlBody) {
     })
 }
 
-export { getMailInfo, sendMail };
+function serveFile(res, pathToFile) {
+    fs.readFile(pathToFile, (err, file) => {
+        if (err) {
+            console.log(err);
+            res.end("An error occured");
+        }
+        res.end(file);
+    });
+}
+
+export { getMailInfo, sendMail, serveFile };

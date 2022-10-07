@@ -5,16 +5,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Markdown Mail Sender - TechEmmy</title>
 </head>
 
-<body>
-    <form>
-        <textarea name="mail" id="mail-body" cols="30" rows="10"></textarea>
-        <button id="send-btn" disabled>Send</button>
-    </form>
+<body class="font-['Poppins'] border-t-8 border-solid border-t-[#92E3A9] bg-[#efefef]">
+    <div class="container max-w-[800px] mx-auto px-10 min-h-screen pb-16">
+        <header class="h-full flex mt-36 flex-col sm:flex-row">
+            <h1 class="text-5xl font-black w-full sm:max-w-[50%] flex-1 leading-[55px]">Send your email in markdown
+                (MMS)</h1>
+            <div class="flex-1">
+                <img class="w-full object-cover	" src="/public/images/headerImage.svg" alt="Bus mail transporter"
+                    loading="lazy">
+            </div>
+        </header>
+        <form class="">
+            <div class="form-top flex gap-x-2 flex-col sm:flex-row">
+                <div class="form-input my-5 flex flex-col flex-1">
+                    <label for="username">Username:</label>
+                    <input
+                        class="mt-3 py-3 px-6 rounded-lg border-2 outline-none border-[#ced4da] focus:border-[#92E3A9]"
+                        type="username" name="username" id="username" placeholder="This will be the Sender's name"
+                        required>
 
+                </div>
+                <div class="form-input my-5 flex flex-col flex-1">
+                    <label for="receiver-email">Recipients email:</label>
+                    <input
+                        class="mt-3 py-3 px-6 rounded-lg border-2 outline-none border-[#ced4da] focus:border-[#92E3A9]"
+                        type="email" name="receiver" id="receiver-email" placeholder="Separate multiple with comma"
+                        required>
+                </div>
+            </div>
+
+            <div class="form-input my-5 flex flex-col">
+                <label for="mail-subject">Subject:</label>
+                <input class="mt-3 py-3 px-6 rounded-lg border-2 outline-none border-[#ced4da] focus:border-[#92E3A9]"
+                    type="text" name="mail-subject" id="mail-subject" placeholder="Enter the mail's subject" required>
+            </div>
+            <div class="form-input my-10 flex flex-col prose">
+                <textarea name="mail" id="mail-body" cols="30" rows="10"></textarea>
+            </div>
+            <button
+                class="w-full bg-[#92E3A9] hover:bg-[#9de6b2] active:bg-[#91c59f] disabled:bg-[#92E3A9] py-3 px-6 rounded-full"
+                id="send-btn" disabled>Send</button>
+            <!-- #92E3A9 DISABLED COLOR -->
+        </form>
+    </div>
+
+    <footer class="w-full h-10 bg-[#ffffff] grid place-items-center">
+        <p class="text-center">Made with ❤️ by <a href="https://github.com/techemmy">TechEmmy</a></p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="/public/script.js"></script>

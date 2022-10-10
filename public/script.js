@@ -79,7 +79,8 @@ sendBtn.addEventListener('click', event => {
             console.log("success")
             sendBtn.textContent = "Sent...";
             setTimeout(() => {
-                sendBtn.disabled = true;
+                sendBtn.disabled = false;
+                sendBtn.textContent = "Send";
             }, 1500);
         } else {
             console.log("failure")

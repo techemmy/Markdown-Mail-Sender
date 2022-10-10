@@ -5,94 +5,79 @@ import fs from "fs";
 dotenv.config();
 
 function getMailInfo(requestObject) {
-    return new Promise((resolve, reject) => {
-        let mailInfo = [];
-        requestObject.on("data", (chunk) => {
-            mailInfo.push(chunk);
-        });
-        requestObject.on("end", () => {
-            const parsedMailInfo = JSON.parse(
-                Buffer.concat(mailInfo).toString("utf-8")
-            );
-            resolve(parsedMailInfo);
-        });
-        requestObject.on("error", (error) => {
-            reject(error);
-        })
+  return new Promise((resolve, reject) => {
+    let mailInfo = [];
+    requestObject.on("data", (chunk) => {
+      mailInfo.push(chunk);
     });
+    requestObject.on("end", () => {
+      const parsedMailInfo = JSON.parse(
+        Buffer.concat(mailInfo).toString("utf-8")
+      );
+      resolve(parsedMailInfo);
+    });
+    requestObject.on("error", (error) => {
+      reject(error);
+    });
+  });
 }
 
-function sendMail(sender, to, subject, body, htmlBody) {
-    return new Promise((resolve, reject) => {
-        nodemailer.createTestAccount((err, account) => {
-            if (err) {
-                console.error("Failed to create a testing account");
-                console.error(err);
-                return process.exit(1);
-            }
+function sendMail(sender, to, subject, body, htmlBody, senderEmail, senderPassword) {
+  return new Promise(async (resolve, reject) => {
 
-            console.log("Credentials obtained, sending message...", sender);
+    let transporter = nodemailer.createTransport(
+      {
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_USER, // senderEmail
+          pass: process.env.MAIL_PASS, // senderPassword
+        },
+        secure: false,
+        logger: true,
+        allowInternalNetworkInterfaces: false,
+      },
+      {
+        // sender info
+        from: `${sender || to} <${process.env.MAIL_USER}>`,
+      }
+    );
 
-            // NB! Store the account object values somewhere if you want
-            // to re-use the same account for future mail deliveries
+    // Message object
+    let message = {
+      // Comma separated list of recipients
+      to: to,
 
-            // Create a SMTP transporter object
-            let transporter = nodemailer.createTransport(
-                {
-                    service: "gmail",
-                    auth: {
-                        user: process.env.MAIL_USER,
-                        pass: process.env.MAIL_PASS,
-                    },
-                    logger: true,
-                    allowInternalNetworkInterfaces: false,
-                },
-                {
-                    // sender info
-                    from: `${sender || to} <${process.env.MAIL_USER}>`,
-                }
-            );
+      // Subject of the message
+      subject: subject,
 
-            // Message object
-            let message = {
-                // Comma separated list of recipients
-                to: to,
+      // plaintext body
+      text: body,
 
-                // Subject of the message
-                subject: subject,
+      // HTML body
+      html: htmlBody,
+    };
 
-                // plaintext body
-                text: body,
+    transporter.sendMail(message, (error, status) => {
+      if (error) {
+        console.log("Error occurred");
+        console.log(error.message);
+        reject({ success: false, status: error });
+      }
 
-                // HTML body
-                html: htmlBody,
-            };
-
-            transporter.sendMail(message, (error, status) => {
-                if (error) {
-                    console.log("Error occurred");
-                    console.log(error.message);
-                    reject({ success: false, status: error });
-                }
-
-                resolve({ success: true, status });
-                console.log(nodemailer.getTestMessageUrl(status));
-
-                // only needed when using pooled connections
-                transporter.close();
-            });
-        });
+      resolve({ success: true, status });
+      console.log(nodemailer.getTestMessageUrl(status));
     });
+  });
 }
 
 function serveFile(res, pathToFile) {
-    fs.readFile(pathToFile, (err, file) => {
-        if (err) {
-            console.log(err);
-            res.end("An error occured");
-        }
-        res.end(file);
-    });
+  fs.readFile(pathToFile, (err, file) => {
+    if (err) {
+      console.log(err);
+      res.end("An error occured");
+    }
+    res.end(file);
+  });
 }
 
 export { getMailInfo, sendMail, serveFile };

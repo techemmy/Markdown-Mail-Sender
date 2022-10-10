@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
-const HOST = process.env.HOST;
+// const HOST = process.env.HOST;
 const PORT = process.env.PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +22,10 @@ const app = http.createServer(async (req, res) => {
         serveFile(res, pathToFile)
     } else if (req.url === "/" && req.method === "POST") {
         try {
-            const {mailFrom, mailTo, mailSubject, mailBody} = await getMailInfo(req);
+            const {username, mailTo, mailSubject, mailBody, senderEmail, senderPassword} = await getMailInfo(req);
             const markdownToHTMLConverter = new getSanitizingConverter();
             const mailBodyInHTML = markdownToHTMLConverter.makeHtml(mailBody)
-            const mailResponse = await sendMail(mailFrom, mailTo, mailSubject, mailBody, mailBodyInHTML);
+            const mailResponse = await sendMail(username, mailTo, mailSubject, mailBody, mailBodyInHTML, senderEmail, senderPassword);
             res.writeHead(200, {'Content-Type':'application/json'})
             res.end(JSON.stringify(mailResponse))
         } catch (error) {

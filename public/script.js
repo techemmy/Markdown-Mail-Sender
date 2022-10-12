@@ -16,6 +16,7 @@ var simplemde = new SimpleMDE({
         delay: 1000,
     }
 });
+maxNoOfMailText.textContent = localStorage.getItem("emailsSent");
 
 if (simplemde.value().trim().length > 1) {
     sendBtn.disabled = false;
